@@ -126,6 +126,48 @@ const chrome = require("selenium-webdriver/chrome");
     await btn.click();
     await closeSupportModalIfOpen();
   }
+  async function clickVuetifyButtonLoose(text, timeout = 30000) {
+    // normalize the text we’re looking for: lower-case, ignore '?'
+    const norm = text.toLowerCase().replace(/\?/g, "");
+
+    // Find a Vuetify button (button/div[@class~='v-btn']/[@role='button']) whose *visible text subtree*
+    // contains our normalized phrase (case-insensitive, ignores '?', collapses spaces).
+    const xp = `
+    (
+      //*[self::button or @role='button' or contains(@class,'v-btn')]
+        [contains(
+          translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ?', 'abcdefghijklmnopqrstuvwxyz '),
+          '${norm}'
+        )]
+    )[1]
+  `;
+
+    // Wait for it to exist and be visible
+    const el = await driver.wait(until.elementLocated(By.xpath(xp)), timeout);
+    await driver.wait(until.elementIsVisible(el), 10000);
+
+    // Scroll into view
+    await driver.executeScript(
+      "arguments[0].scrollIntoView({block:'center'});",
+      el
+    );
+
+    // Try normal click; if intercepted, JS-click; if that fails, use Actions
+    try {
+      await el.click();
+    } catch {
+      try {
+        await driver.executeScript("arguments[0].click();", el);
+      } catch {
+        await driver
+          .actions({ bridge: true })
+          .move({ origin: el })
+          .press()
+          .release()
+          .perform();
+      }
+    }
+  }
 
   async function typeByLabel(labelText, value) {
     await closeSupportModalIfOpen();
@@ -287,7 +329,7 @@ const chrome = require("selenium-webdriver/chrome");
     await clickButton("Next");
 
     // ===== 5) Step 3 — New or Existing =====
-    await clickButton("Is This New Student?");
+    await clickVuetifyButtonLoose("Is This New Student?");
 
     // ===== 6) Step 4 — Upload then Next =====
     const fileToUpload = path.resolve(__dirname, "fixtures", "signature.jpg"); // ensure this exists
