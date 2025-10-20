@@ -234,6 +234,37 @@ const chrome = require("selenium-webdriver/chrome");
     return trigger;
   }
 
+  async function waitForFilePondComplete(timeout = 60000) {
+    await driver.wait(async () => {
+      const uploading = await driver.findElements(
+        By.xpath(
+          "//*[contains(translate(.,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'uploading')]"
+        )
+      );
+      const completed = await driver.findElements(
+        By.xpath(
+          "//*[contains(translate(.,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'upload complete')]"
+        )
+      );
+      return uploading.length === 0 && completed.length >= 1;
+    }, timeout);
+  }
+
+  // Wait for a button (by visible text) to be enabled and return it
+  async function waitEnabledButtonByText(text, timeout = 30000) {
+    const btn = await driver.wait(
+      until.elementLocated(
+        By.xpath(
+          `(//button[.//span[normalize-space(.)='${text}'] or normalize-space(.)='${text}'])[1]`
+        )
+      ),
+      timeout
+    );
+    await driver.wait(until.elementIsVisible(btn), 10000);
+    await driver.wait(async () => await btn.isEnabled(), timeout);
+    return btn;
+  }
+
   async function selectFromDropdown(labelText, optionText) {
     await closeSupportModalIfOpen();
     await waitNoOverlay();
@@ -332,10 +363,20 @@ const chrome = require("selenium-webdriver/chrome");
     await clickVuetifyButtonLoose("Is This New Student?");
 
     // ===== 6) Step 4 — Upload then Next =====
+    // ===== 6) Step 4 — Upload then Next =====
     const fileToUpload = path.resolve(__dirname, "fixtures", "signature.jpg"); // ensure this exists
     await uploadFile(fileToUpload);
-    await driver.sleep(700);
-    await clickButton("Next");
+
+    // 👇 Wait until FilePond has fully finished (no “Uploading”, shows “Upload complete”)
+    await waitForFilePondComplete(60000);
+
+    // 👇 Only now click "Next" (and only when enabled)
+    const nextBtn = await waitEnabledButtonByText("Next", 20000);
+    try {
+      await nextBtn.click();
+    } catch {
+      await driver.executeScript("arguments[0].click();", nextBtn);
+    }
 
     // ===== 7) Step 5 — Student details =====
     await typeByLabel("Student Passport No.", "P12345678");
