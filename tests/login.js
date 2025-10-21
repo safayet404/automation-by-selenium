@@ -33,7 +33,6 @@ async function login(
 
   await clickButton(driver, "Login");
 
-  // give it a real window to redirect
   await driver.wait(until.urlContains("/dashboard"), 30000);
 }
 

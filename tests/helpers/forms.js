@@ -1,3 +1,4 @@
+// tests/helpers/forms.js
 const { By, until, Key } = require("selenium-webdriver");
 const { closeSupportModalIfOpen, waitNoOverlay } = require("./overlay");
 const { waitEnabledByLabel } = require("./elements");
@@ -18,7 +19,6 @@ async function typeByLabel(driver, labelText, value) {
   await driver.wait(until.elementIsVisible(input), 10000);
   await driver.wait(async () => await input.isEnabled(), 10000);
 
-  // If readonly, remove it to allow typing (common in masked/date inputs)
   await driver.executeScript(
     "if(arguments[0].hasAttribute('readonly')) arguments[0].removeAttribute('readonly');",
     input
@@ -29,7 +29,6 @@ async function typeByLabel(driver, labelText, value) {
     await input.clear();
     await input.sendKeys(value);
   } catch {
-    // Fallback to JS set + dispatch events
     await driver.executeScript(
       `
         const el = arguments[0], val = arguments[1];
@@ -100,7 +99,6 @@ async function selectFromDropdown(driver, labelText, optionText) {
     await driver.executeScript("arguments[0].click();", trigger);
   }
 
-  // Try picking from open overlay list; fallback to type+ENTER
   try {
     const option = await driver.wait(
       until.elementLocated(
@@ -141,4 +139,6 @@ module.exports = {
   uploadFile,
   waitForFilePondComplete,
   selectFromDropdown,
+  selectAutocompleteByLabel,
+  selectExistingStudent,
 };

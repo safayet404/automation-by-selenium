@@ -20,14 +20,12 @@ const { login } = require("./login");
   const driver = await createDriver();
 
   try {
-    // 1) Login using the SAME driver
     await login(driver, {
       baseUrl: "https://dev.shabujglobal.org/",
       email: "qa.admin@shabujglobal.org",
       password: "password123@sge.",
     });
 
-    // 2) Go to New Application (you were missing this step)
     await robustGet(driver, "https://dev.shabujglobal.org/application/new");
     await closeSupportModalIfOpen(driver);
 
@@ -38,7 +36,6 @@ const { login } = require("./login");
       30000
     );
 
-    // 3) Selections
     await selectFromDropdown(driver, "Country to Apply", "Cyprus");
     await selectFromDropdown(driver, "Country of Student Passport", "Angola");
     await selectFromDropdown(driver, "Intake", "September 2025");
@@ -51,11 +48,11 @@ const { login } = require("./login");
     );
 
     await clickButton(driver, "Next");
+    await clickButton(driver, "English Requirement");
     await clickButton(driver, "Next");
 
     await clickVuetifyButtonLoose(driver, "Is This New Student?");
 
-    // 4) File upload
     const fileToUpload = path.resolve(__dirname, "fixtures", "signature.jpg");
     await uploadFile(driver, fileToUpload);
     await waitForFilePondComplete(driver, 60000);
@@ -67,7 +64,6 @@ const { login } = require("./login");
       await driver.executeScript("arguments[0].click();", nextBtn);
     }
 
-    // 5) Form fill
     await typeByLabel(driver, "Student Passport No.", "P12345678");
     await typeByLabel(driver, "Date of birth", "1999-05-12");
     await typeByLabel(driver, "Student First Name", "Carolyn");
