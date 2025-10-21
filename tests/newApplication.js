@@ -1,4 +1,6 @@
+// tests/newApplication.js
 const path = require("path");
+const { By, until } = require("selenium-webdriver");
 const {
   createDriver,
   robustGet,
@@ -12,32 +14,20 @@ const {
   uploadFile,
   selectFromDropdown,
 } = require("./helpers");
+const { login } = require("./login");
 
 (async function run() {
   const driver = await createDriver();
 
   try {
-    // 1) Login
-    await robustGet(driver, "https://dev.shabujglobal.org/");
-    await closeSupportModalIfOpen(driver);
+    // 1) Login using the SAME driver
+    await login(driver, {
+      baseUrl: "https://dev.shabujglobal.org/",
+      email: "qa.admin@shabujglobal.org",
+      password: "password123@sge.",
+    });
 
-    const { By, until } = require("selenium-webdriver");
-    const email = await driver.wait(
-      until.elementLocated(By.css('input[type="email"]')),
-      30000
-    );
-    await email.sendKeys("qa.admin@shabujglobal.org");
-
-    const password = await driver.wait(
-      until.elementLocated(By.css('input[type="password"]')),
-      30000
-    );
-    await password.sendKeys("password123@sge.");
-
-    await clickButton(driver, "Login");
-    await driver.wait(until.urlContains("/dashboard"), 30000);
-
-    // 2) New Application Page
+    // 2) Go to New Application (you were missing this step)
     await robustGet(driver, "https://dev.shabujglobal.org/application/new");
     await closeSupportModalIfOpen(driver);
 
