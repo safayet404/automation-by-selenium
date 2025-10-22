@@ -10,4 +10,6 @@ module.exports = {
   ...require("./forms"),
 
   ...require("./autoCompleteSlow"),
+
+  ...require("./clickYesSubmit"),
 };

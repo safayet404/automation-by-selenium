@@ -139,6 +139,4 @@ module.exports = {
   uploadFile,
   waitForFilePondComplete,
   selectFromDropdown,
-  selectAutocompleteByLabel,
-  selectExistingStudent,
 };
