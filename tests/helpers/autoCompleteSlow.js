@@ -1,6 +1,6 @@
 // tests/helpers/autoCompleteSlow.js
 const { By, until, Key } = require("selenium-webdriver");
-const { waitNoOverlay } = require("./overlay");
+const { waitNoOverlay, closeSupportModalIfOpen } = require("./overlay");
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 

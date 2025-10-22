@@ -21,6 +21,23 @@ async function clickButton(driver, text, timeout = 30000) {
   }
 }
 
+async function clickButtonByText(driver, btnText, timeout) {
+  const assignButton = await driver.wait(
+    until.elementLocated(By.xpath(`//button[contains(.,'${btnText}')]`)),
+    timeout
+  );
+
+  await driver.executeScript(
+    "arguments[0].scrollIntoView({block:'center'});",
+    assignButton
+  );
+  try {
+    await assignButton.click();
+  } catch {
+    await driver.executeScript("arguments[0].click();", assignButton);
+  }
+}
+
 async function clickVuetifyButtonLoose(driver, text, timeout = 30000) {
   const norm = text.toLowerCase().replace(/\?/g, "");
   const xp = `
@@ -100,4 +117,5 @@ module.exports = {
   clickVuetifyButtonLoose,
   waitEnabledButtonByText,
   waitEnabledByLabel,
+  clickButtonByText,
 };

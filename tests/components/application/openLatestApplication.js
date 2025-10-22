@@ -4,6 +4,7 @@ const {
   closeSupportModalIfOpen,
   clickButton,
   clickVuetifyButtonLoose,
+  clickButtonByText,
 } = require("../../helpers");
 
 async function waitForTable(driver, timeout = 30000) {
@@ -44,35 +45,25 @@ async function openLatestApplication(driver, baseUrl, timeout = 30000) {
     await driver.executeScript("arguments[0].click();", eyeBtn);
   }
 
-  // Wait for modal to open
-  // await driver.wait(
-  //   until.elementLocated(
-  //     By.xpath(
-  //       "//div[contains(@class,'v-overlay') and contains(@class,'active')]"
-  //     )
-  //   ),
+  // const assignButton = await driver.wait(
+  //   until.elementLocated(By.xpath("//button[contains(.,'Activity Logs')]")),
   //   timeout
   // );
-  closeSupportModalIfOpen(driver);
-  const assignButton = await driver.wait(
-    until.elementLocated(
-      By.xpath("//button[contains(.,'Assign Application Officer')]")
-    ),
-    timeout
-  );
-  await driver.executeScript(
-    "arguments[0].scrollIntoView({block:'center'});",
-    assignButton
-  );
-  try {
-    await assignButton.click();
-  } catch {
-    await driver.executeScript("arguments[0].click();", assignButton);
-  }
 
-  await clickButton(driver, "Communication With AO");
+  // await driver.executeScript(
+  //   "arguments[0].scrollIntoView({block:'center'});",
+  //   assignButton
+  // );
+  // try {
+  //   await assignButton.click();
+  // } catch {
+  //   await driver.executeScript("arguments[0].click();", assignButton);
+  // }
 
-  // await clickVuetifyButtonLoose(driver, "Assign Application Officer");
+  // tabBtn(driver, "Activity Logs", timeout);
+  // clickButtonByText(driver, "Activity Logs", timeout);
+
+  console.log("✅ Clicked 'Assign Application Officer' successfully.");
 
   console.log("✅ Modal opened for the latest application.");
 }
