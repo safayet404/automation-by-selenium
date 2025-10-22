@@ -3,6 +3,7 @@ const { closeSupportModalIfOpen } = require("./overlay");
 
 async function clickButton(driver, text, timeout = 30000) {
   await closeSupportModalIfOpen(driver);
+
   const btn = await driver.wait(
     until.elementLocated(
       By.xpath(
