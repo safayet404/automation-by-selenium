@@ -8,4 +8,6 @@ module.exports = {
   ...require("./elements"),
 
   ...require("./forms"),
+
+  ...require("./autoCompleteSlow"),
 };
