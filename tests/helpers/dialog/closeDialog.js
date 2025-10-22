@@ -113,7 +113,7 @@ async function closeAnyDialog(driver, { timeout = 15000 } = {}) {
       } catch {
         return true;
       }
-    }, 8000);
+    }, 7000);
   } catch {}
 }
 
