@@ -84,7 +84,7 @@ async function closeAnyDialog(driver, { timeout = 15000 } = {}) {
           if (card) {
             await driver
               .actions({ bridge: true })
-              .move({ origin: card, x: 5, y: 5 }) // move inside card first
+              .move({ origin: card, x: 5, y: 5 }) // move inside card firsts
               .move({
                 origin: card,
                 x: (await card.getRect()).width - 10,
