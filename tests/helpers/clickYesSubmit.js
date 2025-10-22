@@ -106,12 +106,6 @@ async function waitForOverlayIfAny(driver, timeout = 15000) {
   }
 }
 
-/**
- * Click a visible control by its text anywhere on the page (modal-safe).
- * @param {WebDriver} driver
- * @param {string} text           Visible text to match ("Confirm Assignment")
- * @param {number} [timeout=15000]
- */
 async function clickByTextAnywhere(driver, text, timeout = 15000) {
   const needle = text.toLowerCase().trim();
 
@@ -179,7 +173,6 @@ async function clickByTextAnywhere(driver, text, timeout = 15000) {
     }
   }
 
-  // Best-effort: give the dialog a beat to react/close
   try {
     await driver.wait(async () => {
       const overlays = await driver.findElements(
