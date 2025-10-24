@@ -192,4 +192,4 @@ async function clickByTextAnywhere(driver, text, timeout = 15000) {
   return true;
 }
 
-module.exports = { clickYesSubmit, clickByTextAnywhere };
+module.exports = { clickYesSubmit, waitForOverlayIfAny, clickByTextAnywhere };

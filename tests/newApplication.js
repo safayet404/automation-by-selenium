@@ -13,6 +13,8 @@ const {
   clickRadioByLabel,
   uploadFile,
   selectFromDropdown,
+  clickButtonByText,
+  clickYesSubmit,
 } = require("./helpers");
 const { login } = require("./login");
 
@@ -64,7 +66,7 @@ const { login } = require("./login");
       await driver.executeScript("arguments[0].click();", nextBtn);
     }
 
-    await typeByLabel(driver, "Student Passport No.", "P12345678");
+    await typeByLabel(driver, "Student Passport No.", `P${Date.now()}`);
     await typeByLabel(driver, "Date of birth", "1999-05-12");
     await typeByLabel(driver, "Student First Name", "Carolyn");
     await typeByLabel(driver, "Student Last Name", "Fox");
@@ -73,7 +75,7 @@ const { login } = require("./login");
     await typeByLabel(
       driver,
       "Enter Student Email",
-      "carolyn.fox@mailinator.com"
+      `user${Date.now()}@mailinator.com`
     );
     await typeByLabel(driver, "Counsellor Email", "counsellor@mailinator.com");
     await typeByLabel(driver, "Student Address", "221B Baker Street");
@@ -84,19 +86,26 @@ const { login } = require("./login");
 
     await clickButton(driver, "Submit");
 
-    await driver.wait(
-      until.elementLocated(
-        By.xpath(
-          "//*[contains(translate(.,'SUCCESS','success'),'success') or contains(.,'submitted') or contains(.,'created')]"
-        )
-      ),
-      30000
+    // await driver.wait(
+    //   until.elementLocated(
+    //     By.xpath(
+    //       "//*[contains(translate(.,'SUCCESS','success'),'success') or contains(.,'submitted') or contains(.,'created')]"
+    //     )
+    //   ),
+    //   30000
+    // );
+    const yesBtn = await driver.wait(
+      until.elementLocated(By.xpath("//button[normalize-space()='Yes']")),
+      5000
     );
+
+    await driver.wait(until.elementIsVisible(yesBtn), 2000);
+    await yesBtn.click();
 
     console.log("✅ New application created successfully.");
   } catch (e) {
     console.error("❌ Automation failed:", e);
   } finally {
-    await driver.quit();
+    // await driver.quit();
   }
 })();

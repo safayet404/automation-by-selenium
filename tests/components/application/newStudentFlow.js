@@ -82,14 +82,14 @@ const newStudent = async (
 
   await clickButton(driver, "Submit");
 
-  await driver.wait(
-    until.elementLocated(
-      By.xpath(
-        "//*[contains(translate(.,'SUCCESS','success'),'success') or contains(.,'submitted') or contains(.,'created')]"
-      )
-    ),
-    timeout
+  const yesBtn = await driver.wait(
+    until.elementLocated(By.xpath("//button[normalize-space()='Yes']")),
+    5000
   );
+
+  await driver.wait(until.elementIsVisible(yesBtn), 2000);
+  await yesBtn.click();
+
   return true;
 };
 

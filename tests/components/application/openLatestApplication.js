@@ -31,7 +31,6 @@ async function openLatestApplication(driver, baseUrl, timeout = 30000) {
     eyeBtn
   );
 
-  // --- ACTION: Click the eye button to OPEN the modal ---
   try {
     await eyeBtn.click();
   } catch {
