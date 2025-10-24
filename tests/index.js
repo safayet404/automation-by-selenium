@@ -12,6 +12,12 @@ const {
 const { login } = require("./login");
 const path = require("path");
 const { Builder, By, Key } = require("selenium-webdriver");
+const { closeByEscOrX, isOverlayOpen } = require("./helpers/esc/esc");
+const {
+  dismissSupportModalIfPresent,
+  withSupportGuard,
+} = require("./helpers/dialog/supportModal");
+const { logout } = require("./components/auth/logout");
 
 const run = async () => {
   const driver = await createDriver();
@@ -50,20 +56,31 @@ const run = async () => {
     // });
     // console.log("✅ New student application created successfully.");
 
+    await dismissSupportModalIfPresent(driver);
+
     await openLatestApplication(driver, "https://dev.shabujglobal.org");
-    // await assignAo(driver, "https://dev.shabujglobal.org");
-    await closeSupportModalIfOpen(driver);
-    try {
-      const active = await driver.switchTo().activeElement();
-      // Send ESC to the active element
-      await active.sendKeys(Key.ESCAPE);
-    } catch {
-      // Fallback: send ESC to <body>
-      const body = await driver.findElement(By.css("body"));
-      await body.sendKeys(Key.ESCAPE);
-    }
+    await assignAo(driver, "https://dev.shabujglobal.org");
+    await dismissSupportModalIfPresent(driver);
+    const closed = await closeByEscOrX(driver, { retries: 2, waitMs: 150 });
+
+    console.log(
+      "Overlay closed?",
+      closed,
+      "| Still open?",
+      await isOverlayOpen(driver)
+    );
+
+    await logout(driver);
+
+    await login(driver, {
+      baseUrl: "https://dev.shabujglobal.org/",
+      email: "qa.ao@shabujglobal.org",
+      password: "password123@sge.",
+    });
   } catch (e) {
     console.error("❌ Flow failed:", e);
+  } finally {
+    // await driver.quit();
   }
 };
 
