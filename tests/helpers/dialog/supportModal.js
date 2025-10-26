@@ -31,7 +31,6 @@ async function dismissSupportModalIfPresent(
   ];
 
   try {
-    // Quick probe: if no overlay root appears soon, bail fast
     await driver.wait(async () => {
       const overlays = await driver.findElements(By.css(modalRootCss));
       return overlays.length > 0;
@@ -40,7 +39,6 @@ async function dismissSupportModalIfPresent(
     return false; // nothing popped
   }
 
-  // Try to find a "Not Now" control and click it
   for (const xp of notNowXPaths) {
     const els = await driver.findElements(By.xpath(xp));
     if (!els.length) continue;
