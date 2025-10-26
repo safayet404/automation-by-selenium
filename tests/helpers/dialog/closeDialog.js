@@ -99,7 +99,7 @@ async function closeAnyDialog(driver, { timeout = 15000 } = {}) {
     }
   }
 
-  // Wait for the dialog to go away (best-effort)
+  // Wait for the dialog to go away
   try {
     await driver.wait(async () => {
       const still = await driver.findElements(
