@@ -89,7 +89,7 @@ async function closeAnyDialog(driver, { timeout = 15000 } = {}) {
                 origin: card,
                 x: (await card.getRect()).width - 10,
                 y: 10,
-              }) // top-right-ish
+              })
               .press()
               .release()
               .perform();
