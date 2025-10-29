@@ -70,7 +70,7 @@ async function closeAnyDialog(driver, { timeout = 15000 } = {}) {
           await driver.executeScript("arguments[0].click();", scrim);
         }
       } else {
-        // 4) ESC key
+        // 4) ESC key detect
         try {
           const body = await driver.findElement(By.css("body"));
           await body.sendKeys(Key.ESCAPE);
