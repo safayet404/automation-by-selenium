@@ -32,7 +32,7 @@ async function closeAnyDialog(driver, { timeout = 15000 } = {}) {
   await driver.wait(until.elementIsVisible(overlay), 5000);
   await driver.sleep(150); // transition buffer
 
-  // 1) Look for a textual action button inside the dialog
+  // 1) Look for a textual action button inside the (dialog)
   const textButtonsXp =
     ".//*[self::button or @role='button' or contains(@class,'v-btn') or contains(@class,'btn')]" +
     "[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'close') " +
