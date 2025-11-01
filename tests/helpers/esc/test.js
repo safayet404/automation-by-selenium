@@ -150,7 +150,7 @@ async function clickAnyClose(driver) {
 
   // Try inside iframes as well
   try {
-    const frames = await driver.findElements(By.css("iframe, frame"));
+    const frames = await driver.findElements(By.css("iframe, frames"));
     for (const f of frames) {
       try {
         await driver.switchTo().frame(f);
@@ -177,10 +177,6 @@ async function clickAnyClose(driver) {
   return false;
 }
 
-/**
- * Try ESC first; if overlay remains (or ESC disabled, persistent modal),
- * fall back to clicking any close control.
- */
 async function closeByEscOrX(driver, { retries = 2, waitMs = 150 } = {}) {
   const before = await isOverlayOpen(driver);
   await pressEscRobust(driver, { retry: 1, waitMs });
