@@ -34,32 +34,32 @@ const run = async () => {
     });
     dismissSupportModalIfPresent(driver);
 
-    await newStudent(driver, {
-      baseUrl: "https://dev.shabujglobal.org",
-      countryToApply: "Cyprus",
-      passportCountry: "Angola",
-      intake: "September 2025",
-      courseType: "Post Graduate",
-      university: "University of Limassol",
-      courseName:
-        "Master of Science in Business Intelligence and Data Analytics",
-      signaturePath: path.resolve(__dirname, "fixtures", "signature.jpg"),
-      student: {
-        passportNo: `P${Date.now()}`,
-        dobISO: "1999-05-12",
-        firstName: "Carolyn",
-        lastName: "Fox",
-        whatsapp: "193",
-        counsellorNumber: "229",
-        email: `user${Date.now()}@mailinator.com`,
-        counsellorEmail: "counsellor@mailinator.com",
-        address: "221B Baker Street",
-        city: "London",
-        country: "Andorra",
-      },
-      timeout: 30000,
-    });
-    console.log("✅ New student application created successfully.");
+    // await newStudent(driver, {
+    //   baseUrl: "https://dev.shabujglobal.org",
+    //   countryToApply: "Cyprus",
+    //   passportCountry: "Angola",
+    //   intake: "September 2025",
+    //   courseType: "Post Graduate",
+    //   university: "University of Limassol",
+    //   courseName:
+    //     "Master of Science in Business Intelligence and Data Analytics",
+    //   signaturePath: path.resolve(__dirname, "fixtures", "signature.jpg"),
+    //   student: {
+    //     passportNo: `P${Date.now()}`,
+    //     dobISO: "1999-05-12",
+    //     firstName: "Carolyn",
+    //     lastName: "Fox",
+    //     whatsapp: "193",
+    //     counsellorNumber: "229",
+    //     email: `user${Date.now()}@mailinator.com`,
+    //     counsellorEmail: "counsellor@mailinator.com",
+    //     address: "221B Baker Street",
+    //     city: "London",
+    //     country: "Andorra",
+    //   },
+    //   timeout: 30000,
+    // });
+    // console.log("✅ New student application created successfully.");
 
     await dismissSupportModalIfPresent(driver);
 
