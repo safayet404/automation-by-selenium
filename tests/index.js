@@ -21,6 +21,7 @@ const { logout } = require("./components/auth/logout");
 const {
   acceptApplication,
 } = require("./components/application/acceptApplication");
+const { statusChange } = require("./components/application/statusChange");
 
 const run = async () => {
   const driver = await createDriver();
@@ -63,28 +64,30 @@ const run = async () => {
     await dismissSupportModalIfPresent(driver);
 
     await openLatestApplication(driver, "https://dev.shabujglobal.org");
-    await assignAo(driver, "https://dev.shabujglobal.org");
-    await dismissSupportModalIfPresent(driver);
-    const closed = await closeByEscOrX(driver, { retries: 2, waitMs: 150 });
+    // await assignAo(driver, "https://dev.shabujglobal.org");
+    // await dismissSupportModalIfPresent(driver);
+    // const closed = await closeByEscOrX(driver, { retries: 2, waitMs: 150 });
 
-    console.log(
-      "Overlay closed?",
-      closed,
-      "| Still open?",
-      await isOverlayOpen(driver)
-    );
+    // console.log(
+    //   "Overlay closed?",
+    //   closed,
+    //   "| Still open?",
+    //   await isOverlayOpen(driver)
+    // );
 
-    await logout(driver);
+    // await logout(driver);
 
-    await login(driver, {
-      baseUrl: "https://dev.shabujglobal.org/",
-      email: "qa.ao@shabujglobal.org",
-      password: "password123@sge.",
-    });
+    // await login(driver, {
+    //   baseUrl: "https://dev.shabujglobal.org/",
+    //   email: "qa.ao@shabujglobal.org",
+    //   password: "password123@sge.",
+    // });
 
-    await dismissSupportModalIfPresent(driver);
+    // await dismissSupportModalIfPresent(driver);
 
-    await acceptApplication(driver, "https://dev.shabujglobal.org");
+    // await acceptApplication(driver, "https://dev.shabujglobal.org");
+
+    await statusChange(driver);
   } catch (e) {
     console.error("❌ Flow failed:", e);
   } finally {
