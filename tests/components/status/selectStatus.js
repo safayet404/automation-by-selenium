@@ -1,8 +1,7 @@
-// simple-status.js
 const { By, until, Key } = require("selenium-webdriver");
 
-async function setStatus(driver, text, timeout = 8000) {
-  // Find the Status input, then its combobox container
+async function setStatusAndSubmit(driver, text, timeout = 8000) {
+  // 1) Find the Status combobox via the input id prefix and open it
   const input = await driver.wait(
     until.elementLocated(By.css("input[id^='app-autocomplete-Status-']")),
     timeout
@@ -10,38 +9,33 @@ async function setStatus(driver, text, timeout = 8000) {
   const combo = await input.findElement(
     By.xpath("./ancestor::div[@role='combobox']")
   );
-
-  // Bring into view and open the combobox (JS click avoids 'not interactable')
   await driver.executeScript(
     "arguments[0].scrollIntoView({block:'center'})",
     combo
   );
-  await driver.executeScript("arguments[0].click()", combo);
+  await driver.executeScript("arguments[0].click()", combo); // open without interacting with input
 
-  // Wait until it’s actually open (aria-expanded=true)
-  await driver
-    .wait(
-      async () => (await combo.getAttribute("aria-expanded")) === "true",
-      3000
-    )
-    .catch(() => {});
-
-  // Type with keyboard to the focused element and confirm
+  // 2) Type to the focused element (NOT the input) and select
   await driver
     .actions({ async: true })
-    .pause(100)
+    .sendKeys(Key.chord(Key.CONTROL, "")) // select-all (linux/windows)
     .sendKeys(text)
-    .pause(150)
-    .sendKeys(Key.ENTER)
+    .pause(200) // let it filter
+    .sendKeys(Key.ARROW_DOWN)
+    .sendKeys(Key.ENTER) // choose the highlighted option
     .perform();
 
-  // Read back the selected value from the input
+  // 3) Submit (use JS click to avoid hit-area issues)
+  const submit = await driver.wait(
+    until.elementLocated(
+      By.xpath("//div[@role='dialog']//button[contains(.,'Submit')]")
+    ),
+    timeout
+  );
+  await driver.executeScript("arguments[0].click()", submit);
+
+  // (optional) return the selected value
   return await input.getAttribute("value");
 }
 
-module.exports = { setStatus };
-
-/* Usage:
-const selected = await setStatus(driver, "Application Submitted");
-console.log("Selected:", selected);
-*/
+module.exports = { setStatusAndSubmit };
